@@ -1,0 +1,98 @@
+﻿@model List<LibraryManagementSystem.Models.Book>
+
+@{
+    ViewData["Title"] = "Welcome to Library Management System";
+}
+
+<div class="container text-center my-5">
+    <div class="banner p-5 text-white">
+        <div class="d-flex justify-content-center align-items-center">
+            <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" width="80" class="me-3" alt="Library Logo">
+            <h1 class="display-4">📚 Welcome to Library Management</h1>
+        </div>
+        <p class="lead mt-3">Discover new books, search for your favorites, and manage your library efficiently.</p>
+        <a href="/Books" class="btn btn-primary btn-lg mt-3"><i class="fas fa-book"></i> Explore Books</a>
+    </div>
+
+    <h2 class="mt-5">🔥 Featured Books</h2>
+    <div class="row mt-4">
+        @if (Model.Any())
+        {
+            @foreach (var book in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="@book.CoverImagePath" class="card-img-top" alt="Book Cover">
+                        <div class="card-body">
+                            <h5 class="card-title">@book.Title</h5>
+                            <p class="card-text">@book.Description</p>
+                            <a href="/Books/Details/@book.Id" class="btn btn-info">Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="https://source.unsplash.com/300x200/?book" class="card-img-top" alt="Book Cover">
+                    <div class="card-body">
+                        <h5 class="card-title">The Great Adventure</h5>
+                        <p class="card-text">An exciting journey through the world of books.</p>
+                        <a href="#" class="btn btn-info">Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="https://source.unsplash.com/300x200/?library" class="card-img-top" alt="Book Cover">
+                    <div class="card-body">
+                        <h5 class="card-title">Knowledge is Power</h5>
+                        <p class="card-text">Unlock the power of knowledge with our book collection.</p>
+                        <a href="#" class="btn btn-info">Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="https://source.unsplash.com/300x200/?education" class="card-img-top" alt="Book Cover">
+                    <div class="card-body">
+                        <h5 class="card-title">Learning Never Ends</h5>
+                        <p class="card-text">Find books that expand your mind and horizon.</p>
+                        <a href="#" class="btn btn-info">Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="mt-5">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a href="/Books" class="btn btn-outline-success btn-lg">📚 Manage Your Books</a>
+        }
+        else
+        {
+            <a href="/Identity/Account/Login" class="btn btn-outline-primary btn-lg">🔐 Login</a>
+            <a href="/Identity/Account/Register" class="btn btn-outline-warning btn-lg">📝 Register</a>
+        }
+    </div>
+</div>
+
+<style>
+    .banner {
+        background: linear-gradient(to right, #007bff, #6610f2);
+        border-radius: 15px;
+        padding: 50px;
+        color: white;
+    }
+
+    .card {
+        transition: 0.3s;
+    }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+</style>

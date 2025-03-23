@@ -1,0 +1,85 @@
+﻿@model X.PagedList.IPagedList<LibraryManagementSystem.Models.Book>
+@using X.PagedList.Mvc.Core
+@using X.PagedList
+
+@{
+    ViewData["Title"] = "Books";
+}
+
+<h1 class="text-center my-4">📚 Books Collection</h1>
+
+<form asp-action="Index" method="get" class="d-flex justify-content-center mb-3">
+    <input type="text" name="searchString" value="@Context.Request.Query["searchString"]"
+           class="form-control w-25 me-2" placeholder="Search books..." />
+    <button type="submit" class="btn btn-primary">🔍 Search</button>
+</form>
+
+@if (User.IsInRole("Admin"))
+{
+    <div class="text-center mb-3">
+        <a asp-action="Create" class="btn btn-success">➕ Add New Book</a>
+    </div>
+}
+
+<table class="table table-striped table-hover text-center">
+    <thead class="table-dark">
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParam"]"
+                   asp-route-searchString="@Context.Request.Query["searchString"]" class="text-light">
+                    📖 Title
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AuthorSortParam"]"
+                   asp-route-searchString="@Context.Request.Query["searchString"]" class="text-light">
+                    ✍️ Author
+                </a>
+            </th>
+            <th>📅 Year</th>
+            <th>📸 Cover Image</th>
+            <th>📜 Description</th>
+            <th>⚙️ Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.Author</td>
+                <td>@item.Year</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.CoverImagePath))
+                    {
+                        <img src="@item.CoverImagePath" alt="Book Cover" class="img-thumbnail" width="80" height="100" />
+                    }
+                </td>
+                <td>@item.Description</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">🔍 Details</a>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">✏️ Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">🗑 Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-center mt-4">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchString = Context.Request.Query["searchString"], sortOrder = Context.Request.Query["sortOrder"] }),
+            new PagedListRenderOptions
+    {
+        Display = PagedListDisplayMode.IfNeeded,
+        DisplayItemSliceAndTotal = true,
+        MaximumPageNumbersToDisplay = 5,
+        ContainerDivClasses = new[] { "pagination-container" },
+        UlElementClasses = new[] { "pagination", "justify-content-center" },
+        LiElementClasses = new[] { "page-item" },
+        PageClasses = new[] { "page-link" }
+    })
+</div>
